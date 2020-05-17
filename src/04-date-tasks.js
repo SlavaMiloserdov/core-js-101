@@ -19,8 +19,8 @@
  *    'Tue, 26 Jan 2016 13:48:02 GMT' => Date()
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
-function parseDataFromRfc2822(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromRfc2822(value) {
+  return new Date(value);
 }
 
 /**
@@ -34,8 +34,8 @@ function parseDataFromRfc2822(/* value */) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return new Date(value);
 }
 
 
@@ -53,8 +53,19 @@ function parseDataFromIso8601(/* value */) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  let res = false;
+  const year = date.getFullYear();
+  if (year % 4) {
+    res = false;
+  } else if (year % 100) {
+    res = true;
+  } else if (year % 400) {
+    res = false;
+  } else {
+    res = true;
+  }
+  return res;
 }
 
 
@@ -73,8 +84,28 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  let diff = endDate.getTime() - startDate.getTime();
+
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  diff -= hours * (1000 * 60 * 60);
+
+  let mins = Math.floor(diff / (1000 * 60)).toString();
+  if (mins.length === 1) {
+    mins = '0'.concat(mins);
+  }
+  diff -= mins * (1000 * 60);
+
+  let seconds = Math.floor(diff / (1000)).toString();
+  if (seconds.length === 1) {
+    seconds = '0'.concat(seconds);
+  }
+  diff -= seconds * (1000);
+  if (diff.toString().length === 1) {
+    diff = '00'.concat(diff);
+  }
+
+  return `0${hours}:${mins}:${seconds}.${diff}`;
 }
 
 
